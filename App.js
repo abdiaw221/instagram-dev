@@ -1,12 +1,30 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
+// firebase import
 import firebase from "firebase/app";
+import 'firebase/auth';        // for authentication
+import 'firebase/storage';     // for storage
+import 'firebase/database';    // for realtime database
+import 'firebase/firestore';   // for cloud firestore
+import 'firebase/messaging';   // for cloud messaging
+import 'firebase/functions';   // for cloud functions
 
+// Screen
 import LandingScreen from "./components/auth/Landing";
 import RegisterScreen from "./components/auth/Register";
+import LoginScreen from "./components/auth/Login";
+import MainScreen from "./components/Main";
+import AddScreen from "./components/main/Add";
+
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import rootReducer from "./redux/reducers";
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 // Initialize Firebase
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -55,10 +73,10 @@ export default class App extends Component {
     if (!loaded) {
       return (
         <View>
-          <Text style={{flex: 1, justifyContent: 'center'}} >loading</Text>
+          <Text style={{ flex: 1, justifyContent: "center" }}>loading</Text>
         </View>
       );
-    } 
+    }
 
     if (!loggedIn) {
       return (
@@ -70,14 +88,27 @@ export default class App extends Component {
               options={{ headerShown: false }}
             />
             <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       );
     }
     return (
-      <View  style={{flex: 1, justifyContent: 'center'}}>
-        <Text>You're not loggedIn </Text>
-      </View>
+      <Provider store={store}>
+        <NavigationContainer>
+        <Stack.Navigator initialRouteName="Main">
+            <Stack.Screen
+              name="Main"
+              component={MainScreen}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="Add"
+              component={AddScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     );
   }
 }
