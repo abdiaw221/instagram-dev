@@ -18,11 +18,13 @@ import RegisterScreen from "./components/auth/Register";
 import LoginScreen from "./components/auth/Login";
 import MainScreen from "./components/Main";
 import AddScreen from "./components/main/Add";
+import SaveScreen from "./components/main/Save";
 
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import rootReducer from "./redux/reducers";
+
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
@@ -105,6 +107,11 @@ export default class App extends Component {
              <Stack.Screen
               name="Add"
               component={AddScreen}
+              navigation={this.props.navigation}
+            />
+            <Stack.Screen
+              name="Save"
+              component={SaveScreen}
             />
           </Stack.Navigator>
         </NavigationContainer>
